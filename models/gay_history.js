@@ -3,13 +3,32 @@ const Schema = mongoose.Schema;
 
 const gayHistorySchema = new Schema({
     history: [{
-        user: {
+        most_gay: {
             type: Schema.Types.ObjectId,
-            ref: "User",
+            ref: 'User',
         },
-        score: {
+        least_gay: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+        },
+        extreme_scores: [{
             type: Number,
-        }
+            required: true,
+        }],
+        date: {
+            type: Date, 
+            required: true
+        },
+        scores: [{
+            user: {
+                type: Schema.Types.ObjectId,
+                ref: 'User',
+            },
+            score: {
+                type: Number,
+                required: true 
+            }
+        }],
     }],
 });
 

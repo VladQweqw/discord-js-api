@@ -10,14 +10,6 @@ const user = new Schema({
         type: String,
         required: true,
     },
-    date: {
-        type: String,
-        required: true,
-    },
-    streak: {
-        type: Number,
-    },
-    
 
 }, {
     timestamps: true,
