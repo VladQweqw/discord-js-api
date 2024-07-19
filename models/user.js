@@ -5,12 +5,7 @@ const user = new Schema({
     discord_id: {
         type: String,
         required: true,
-    },
-    name: {
-        type: String,
-        required: true,
-    },
-
+    }
 }, {
     timestamps: true,
 })

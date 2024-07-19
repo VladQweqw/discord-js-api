@@ -2,11 +2,13 @@ const GayHistory = require("../models/gay_history");
 const User = require("../models/user")
 
 const get_gay_users = (req, res) => {
+    const limit = parseInt(req.query.limit) || 10;
 
     GayHistory.find()
-    .populate('history.most_gay')
-    .populate("history.least_gay")
-    .populate("history.scores.user")
+    .limit(limit)
+    .populate('most_gay')
+    .populate("least_gay")
+    .populate("scores.user")
     .then((result) => {
         res.json({
             data: result
@@ -101,7 +103,7 @@ async function post_gay_users(req, res) {
                 scores,
             })
             await gayHistory.save();
-            return res.status(200).json({detail: `User added to history, ${formated_Date}`})
+            return res.status(200).json({detail: `Entry added to history, ${formated_Date}`})
         }
         catch(err) {
             return res.status(400).json({error: "Error while adding the user to history"})
