@@ -2,7 +2,8 @@ const GayHistory = require("../models/gay_history");
 const User = require("../models/user")
 
 const get_gay_users = (req, res) => {
-    const limit = parseInt(req.query.limit) || 10;
+    let limit = parseInt(req.query.limit) || 10;
+    limit = Math.min(limit, 10);
 
     GayHistory.find()
     .limit(limit)
@@ -10,6 +11,10 @@ const get_gay_users = (req, res) => {
     .populate("least_gay")
     .populate("scores.user")
     .then((result) => {
+        if(req.query.reverse === 'true') {
+            result = result.reverse()
+        }
+
         res.json({
             data: result
         })
@@ -27,11 +32,18 @@ const get_gay_users_by_date = async (req, res) => {
     if(!date) res.status(400).json({
         error: "Invalid date"
     })
-    
+
+    if(req.params.date === 'prev') {
+        const date = new Date();
+
+        const format_date = `${date.getDate() - 1}-${date.getMonth() + 1}-${date.getFullYear()}`
+        req.params.date = format_date;
+    }
+
     await GayHistory.findOne({date: req.params.date})
-    .populate('history.most_gay')
-    .populate("history.least_gay")
-    .populate("history.scores.user")
+    .populate('most_gay')
+    .populate("least_gay")
+    .populate("scores.user")
     .then((result) => {
         res.json({
             data: result
