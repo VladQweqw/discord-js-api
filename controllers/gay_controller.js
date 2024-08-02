@@ -2,8 +2,8 @@ const GayHistory = require("../models/gay_history");
 const User = require("../models/user")
 
 const get_gay_users = (req, res) => {
-    let limit = parseInt(req.query.limit) || 10;
-    limit = Math.min(limit, 10);
+    let limit = parseInt(req.query.limit) || 3;
+    limit = Math.min(limit, 3);
 
     GayHistory.find()
     .limit(limit)
@@ -28,7 +28,10 @@ const get_gay_users = (req, res) => {
 }
 
 const get_gay_users_by_date = async (req, res) => {
-    const date = req.params.date
+    let date = req.params.date
+
+    console.log(date);
+
     if(!date) res.status(400).json({
         error: "Invalid date"
     })
@@ -37,10 +40,10 @@ const get_gay_users_by_date = async (req, res) => {
         const date = new Date();
 
         const format_date = `${date.getDate() - 1}-${date.getMonth() + 1}-${date.getFullYear()}`
-        req.params.date = format_date;
+        date = format_date;
     }
-
-    await GayHistory.findOne({date: req.params.date})
+    
+    await GayHistory.findOne({date: date})
     .populate('most_gay')
     .populate("least_gay")
     .populate("scores.user")
